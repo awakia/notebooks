@@ -8,6 +8,7 @@ jupyter = "*"
 
 [packages]
 pyaudio = "*"
+google-cloud-speech = "*"
 
 [requires]
 python_version = "3.7"
