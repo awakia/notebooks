@@ -5,9 +5,11 @@ verify_ssl = true
 
 [dev-packages]
 jupyter = "*"
+jupyter-contrib-nbextensions = "*"
 
 [packages]
 pyaudio = "*"
+google-cloud-speech = "*"
 
 [requires]
 python_version = "3.7"
