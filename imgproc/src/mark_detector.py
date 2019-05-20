@@ -48,16 +48,16 @@ class MarkDetector:
 
 class TriangleDetector(MarkDetector):
   def match(self, val):
-    # return (
-    #   val & 0b000100010001 == 0b000100010001 or
-    #   val & 0b001000100010 == 0b001000100010 or
-    #   val & 0b010001000100 == 0b010001000100
-    # )
     return (
-      val == 0b000100010001 or
-      val == 0b001000100010 or
-      val == 0b010001000100
+      val & 0b000100010001 == 0b000100010001 or
+      val & 0b001000100010 == 0b001000100010 or
+      val & 0b010001000100 == 0b010001000100
     )
+    # return (
+    #   val == 0b000100010001 or
+    #   val == 0b001000100010 or
+    #   val == 0b010001000100
+    # )
 
 class CircleDetector(MarkDetector):
   def match(self, val):

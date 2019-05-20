@@ -12,12 +12,13 @@ def proc(img):
   visualize.img(img, "gray")
   gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
   # visualize.img(gray, "gray")
+  edge_type.get_bitembed(gray, apply_filter=False) # to visualize original
   bits = edge_type.get_bitembed(gray)
   ditector = mark_detector.TriangleDetector(bits)
   # ditector = mark_detector.CircleDetector(bits)
-  found = ditector.detect(5)
+  found = ditector.detect(6)
   visualize.with_found(img, found)
-  # visualize.img(img)
+  visualize.img(img)
 
 def main():
   # path = "data/all/*.png"
