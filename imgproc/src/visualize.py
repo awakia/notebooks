@@ -6,9 +6,9 @@ import numpy as np
 def random_color():
   return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), 255)
 
-def img(img, cmap=None):
+def img(img, cmap=None, norm=None):
   plt.figure(figsize=(10,10), dpi=200)
-  plt.imshow(img, cmap)
+  plt.imshow(img, cmap, norm)
   plt.show()
 
 def with_lines(img, lines, plot=True):
