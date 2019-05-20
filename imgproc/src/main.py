@@ -25,11 +25,11 @@ def edge_type(gray):
   visualize.img(bgr)
   return hue, brightness
 
-def bitembed_edge_type(hue, brightness, ang=5, thresh=128):
+def bitembed_edge_type(hue, brightness, ang=10, thresh=128):
   lut = np.zeros((256, 1), dtype=np.uint16) # or 65536
   for x in range(12):
     for v in range(x*15-ang, x*15 +ang+1):
-      lut[v%180][0] = 1 << x # 1 + x
+      lut[v%180][0] |= 1 << x # 1 + x
   br = brightness.astype(np.uint16)
   th, mask = cv2.threshold(br, 127, 65535, cv2.THRESH_BINARY)
   # visualize.img(mask)
