@@ -25,7 +25,7 @@ def edge_type(gray):
   visualize.img(bgr)
   return hue, brightness
 
-def bitembed_edge_type(hue, brightness, ang=10, thresh=128):
+def bitembed_edge_type(hue, brightness, ang=3, thresh=128):
   lut = np.zeros((256, 1), dtype=np.uint16) # or 65536
   for x in range(12):
     for v in range(x*15-ang, x*15 +ang+1):
@@ -54,9 +54,11 @@ def proc(img):
   # visualize.img(gray, "gray")
   hue, brightness = edge_type(gray)
   bits = bitembed_edge_type(hue, brightness)
-  ditector = mark_detector.TriangleDetector(bits)
+  # ditector = mark_detector.TriangleDetector(bits)
+  ditector = mark_detector.CircleDetector(bits)
   found = ditector.detect(5)
   visualize.with_found(img, found)
+  visualize.img(img)
 
   # lines = get_lines(gray)
   # visualize.with_lines(img, lines)
