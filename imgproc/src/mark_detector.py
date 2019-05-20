@@ -1,4 +1,5 @@
 import cv2
+import visualize
 from abc import abstractmethod
 
 USED_FLAG = 0x8000
@@ -12,7 +13,7 @@ class MarkDetector:
     n = len(self.layers)
     N = 1 << (n-1)
     prev = self.layers[-1]
-    print("adding layer", n+1, prev.shape)
+    print("adding layer", n, prev.shape)
     if N >= prev.shape[0] or N >= prev.shape[1]:
       return False
     layer = cv2.bitwise_or(
@@ -37,6 +38,7 @@ class MarkDetector:
     while True:
       if max_layer is not None and len(self.layers) >= max_layer: break
       if not self.add_layer(): break
+      visualize.img(self.layers[-1], 'hsv', True)
       self.check_layer()
     return self.found
 

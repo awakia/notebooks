@@ -2,7 +2,6 @@ import glob
 import math
 import cv2
 import numpy as np
-import matplotlib.colors as colors
 import mark_detector
 
 import filters
@@ -37,7 +36,7 @@ def bitembed_edge_type(hue, brightness, ang=10, thresh=128):
   bits = cv2.LUT(hue, lut)
   res = cv2.bitwise_and(bits, mask)
   # print("res max,min,type", np.max(res), np.min(res), res.dtype)
-  visualize.img(res, 'hsv', colors.LogNorm())
+  visualize.img(res, 'hsv', True)
   return res
 
 def get_lines(gray):
