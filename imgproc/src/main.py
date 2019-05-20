@@ -3,6 +3,7 @@ import math
 import cv2
 import numpy as np
 import matplotlib.colors as colors
+import mark_detector
 
 import filters
 import visualize
@@ -44,6 +45,7 @@ def get_lines(gray):
   lines, width, prec, nfa = lsd.detect(gray)
   return np.reshape(lines, (len(lines), 2, 2))
 
+
 # cmap reference: https://matplotlib.org/examples/color/colormaps_reference.html
 # https://en.wikipedia.org/wiki/Sobel_operator
 def proc(img):
@@ -52,7 +54,10 @@ def proc(img):
   gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
   # visualize.img(gray, "gray")
   hue, brightness = edge_type(gray)
-  bitembed_edge_type(hue, brightness)
+  bits = bitembed_edge_type(hue, brightness)
+  ditector = mark_detector.TriangleDetector(bits)
+  found = ditector.detect(5)
+  visualize.with_found(img, found)
 
   # lines = get_lines(gray)
   # visualize.with_lines(img, lines)

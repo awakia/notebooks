@@ -11,6 +11,17 @@ def img(img, cmap=None, norm=None):
   plt.imshow(img, cmap, norm)
   plt.show()
 
+def with_found(img, found, plot=True):
+  out = img.copy()
+  for x, y, size in found:
+    color = random_color()
+    out = cv2.rectangle(out, (x, y), (x+size, y+size), color, 2)
+  if plot:
+    plt.figure(figsize=(10,10), dpi=200)
+    plt.imshow(out)
+    plt.show()
+  return out
+
 def with_lines(img, lines, plot=True):
   out = img.copy()
   for l in lines:
