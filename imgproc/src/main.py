@@ -14,11 +14,12 @@ def proc(img):
   # visualize.img(gray, "gray")
   edge_type.get_bitembed(gray, apply_filter=False) # to visualize original
   bits = edge_type.get_bitembed(gray)
-  ditector = mark_detector.TriangleDetector(bits)
-  # ditector = mark_detector.CircleDetector(bits)
-  found = ditector.detect(6)
-  visualize.with_found(img, found)
-  visualize.img(img)
+  # circle_det = mark_detector.CircleDetector(bits)
+  # circle_found = circle_det.detect(6)
+  # visualize.with_found(img, circle_found)
+  triangle_det = mark_detector.TriangleDetector(bits)
+  triangle_found = triangle_det.detect(6)
+  visualize.with_found(img, triangle_found)
 
 def main():
   # path = "data/all/*.png"

@@ -61,4 +61,9 @@ class TriangleDetector(MarkDetector):
 
 class CircleDetector(MarkDetector):
   def match(self, val):
-    return val & 0b011111111111 == 0b011111111111
+    # return val & 0b011111111111 == 0b011111111111
+    cnt = 0
+    if val & 0b000100010001 == 0b000100010001: cnt += 1
+    if val & 0b001000100010 == 0b001000100010: cnt += 1
+    if val & 0b010001000100 == 0b010001000100: cnt += 1
+    return cnt >= 2

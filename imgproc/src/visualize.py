@@ -15,12 +15,14 @@ def img(img, cmap=None, log_scale=False):
 
 def with_found(img, found, alpha = 0.01, plot=True):
   out = img.copy()
+  cimg = np.zeros_like(out)
+  cv2.rectangle(cimg, (0,0), cimg.shape[:2], (255, 0, 0), -1)
+  print(len(found))
   for x, y, size in found:
     # color = random_color()
     # out = cv2.rectangle(out, (x, y), (x+size-1, y+size-1), color, 2)
-    overlay = out.copy()
-    overlay = cv2.rectangle(overlay, (x, y), (x+size-1, y+size-1), (255, 0, 0), -1)
-    out = cv2.addWeighted(overlay, alpha, out, 1 - alpha, 0)
+    roi = out[y:y+size, x:x+size]
+    cv2.addWeighted(roi, 1 - alpha, cimg[:size,:size], alpha, 0, roi)
   if plot:
     plt.figure(figsize=(10,10), dpi=200)
     plt.imshow(out)
