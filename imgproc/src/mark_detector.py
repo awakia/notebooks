@@ -4,66 +4,75 @@ from abc import abstractmethod
 
 USED_FLAG = 0x8000
 
+
 class MarkDetector:
-  def __init__(self, bits):
-    self.layers = [bits]
-    self.found = [] # (x, y, size)
+    def __init__(self, bits):
+        self.layers = [bits]
+        self.found = []  # (x, y, size)
 
-  def add_layer(self):
-    n = len(self.layers)
-    N = 1 << (n-1)
-    prev = self.layers[-1]
-    print("adding layer", n, prev.shape)
-    if N >= prev.shape[0] or N >= prev.shape[1]:
-      return False
-    layer = cv2.bitwise_or(
-      cv2.bitwise_or(prev[:-N,:-N], prev[N:,:-N]),
-      cv2.bitwise_or(prev[:-N,N:], prev[N:,N:])
-    )
-    self.layers.append(layer)
-    return True
+    def add_layer(self):
+        n = len(self.layers)
+        N = 1 << (n-1)
+        prev = self.layers[-1]
+        print("adding layer", n, prev.shape)
+        if N >= prev.shape[0] or N >= prev.shape[1]:
+            return False
+        layer = cv2.bitwise_or(
+            cv2.bitwise_or(prev[:-N, :-N], prev[N:, :-N]),
+            cv2.bitwise_or(prev[:-N, N:], prev[N:, N:])
+        )
+        self.layers.append(layer)
+        return True
 
-  def check_layer(self):
-    prev = self.layers[-1]
-    h, w = prev.shape
-    for y in range(h):
-      for x in range(w):
-        val = prev[y, x]
-        # if USED_FLAG & val == USED_FLAG: continue
-        if self.match(val):
-          # val |= USED_FLAG
-          self.found.append((x, y, 1 << (len(self.layers)-1)))
+    def check_layer(self):
+        prev = self.layers[-1]
+        h, w = prev.shape
+        for y in range(h):
+            for x in range(w):
+                val = prev[y, x]
+                if USED_FLAG & val == USED_FLAG:
+                    continue  # need to consider
+                if self.match(val):
+                    prev[y, x] |= USED_FLAG  # need to consider
+                    self.found.append((x, y, 1 << (len(self.layers)-1)))
 
-  def detect(self, max_layer = None):
-    while True:
-      if max_layer is not None and len(self.layers) >= max_layer: break
-      if not self.add_layer(): break
-      # visualize.img(self.layers[-1], 'hsv', True)
-      self.check_layer()
-    return self.found
+    def detect(self, max_layer=None):
+        while True:
+            if max_layer is not None and len(self.layers) >= max_layer:
+                break
+            if not self.add_layer():
+                break
+            # visualize.img(self.layers[-1], 'hsv', True)
+            self.check_layer()
+        return self.found
 
-  @abstractmethod
-  def match(self, val):
-    raise NotImplementedError()
+    @abstractmethod
+    def match(self, val):
+        raise NotImplementedError()
+
 
 class TriangleDetector(MarkDetector):
-  def match(self, val):
-    return (
-      val & 0b000100010001 == 0b000100010001 or
-      val & 0b001000100010 == 0b001000100010 or
-      val & 0b010001000100 == 0b010001000100
-    )
-    # return (
-    #   val == 0b000100010001 or
-    #   val == 0b001000100010 or
-    #   val == 0b010001000100
-    # )
+    def match(self, val):
+        return (
+            val & 0b000100010001 == 0b000100010001 or
+            val & 0b001000100010 == 0b001000100010 or
+            val & 0b010001000100 == 0b010001000100
+        )
+        # return (
+        #   val == 0b000100010001 or
+        #   val == 0b001000100010 or
+        #   val == 0b010001000100
+        # )
+
 
 class CircleDetector(MarkDetector):
-  def match(self, val):
-    # return val & 0b011111111111 == 0b011111111111
-    cnt = 0
-    if val & 0b000100010001 == 0b000100010001: cnt += 1
-    if val & 0b001000100010 == 0b001000100010: cnt += 1
-    if val & 0b010001000100 == 0b010001000100: cnt += 1
-    return cnt >= 2
+    def match(self, val):
+        # return val & 0b011111111111 == 0b011111111111
+        cnt = 0
+        if val & 0b000100010001 == 0b000100010001:
+            cnt += 1
+        if val & 0b001000100010 == 0b001000100010:
+            cnt += 1
+        if val & 0b010001000100 == 0b010001000100:
+            cnt += 1
+        return cnt >= 2
